@@ -1,0 +1,36 @@
+# Perl build artifacts
+blib/
+_build/
+Build
+Build.bat
+MYMETA.*
+META.json
+META.yml
+Makefile
+pm_to_blib
+*.o
+*.bs
+*.so
+*.dll
+
+# ExtUtils::MakeMaker
+*.old
+
+# cpanm / local libs
+local/
+fatlib/
+
+# Module::Build
+_build_params
+
+# Test coverage
+cover_db/
+nytprof*
+
+# Editor/OS
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

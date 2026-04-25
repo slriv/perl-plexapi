@@ -1,0 +1,14 @@
+.git
+.gitignore
+.DS_Store
+
+blib
+_build
+Makefile
+pm_to_blib
+*.o
+*.bs
+*.tar.gz
+
+docker-compose.yml
+compose.yml

@@ -1,0 +1,15 @@
+Changes
+cpanfile
+LICENSE
+lib/WebService/Plex.pm
+lib/WebService/Plex/Library.pm
+lib/WebService/Plex/Server.pm
+Makefile.PL
+MANIFEST
+README
+t/00-load.t
+t/01-constructor.t
+t/02-get-query-encoding.t
+t/03-server.t
+t/04-library.t
+t/lib/FakePlex.pm

@@ -1,0 +1,19 @@
+WebService-Plex
+
+Perl interface to the Plex Media Server API.
+
+This repository is scaffolded as a CPAN-style distribution.
+The API surface, tests, metadata, and release notes are expected to evolve.
+
+Current layout:
+
+  lib/    Module source
+  t/      Distribution tests
+
+Build/install entry point:
+
+  Makefile.PL
+
+Dependency manifest for developers/tools:
+
+  cpanfile
