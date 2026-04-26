@@ -61,9 +61,16 @@ ok $results, 'search returns data';
 # --- mark_played / mark_unplayed round-trip ---
 
 $plex->library->mark_played($rating_key);
-pass 'mark_played did not throw';
+my $after_play = $plex->library->metadata($rating_key);
+my $played_item = $after_play->{MediaContainer}{Metadata};
+$played_item = ref $played_item eq 'ARRAY' ? $played_item->[0] : $played_item;
+ok $played_item->{viewCount},    'mark_played increments viewCount';
+ok $played_item->{lastViewedAt}, 'mark_played sets lastViewedAt';
 
 $plex->library->mark_unplayed($rating_key);
-pass 'mark_unplayed did not throw';
+my $after_unplay = $plex->library->metadata($rating_key);
+my $unplayed_item = $after_unplay->{MediaContainer}{Metadata};
+$unplayed_item = ref $unplayed_item eq 'ARRAY' ? $unplayed_item->[0] : $unplayed_item;
+ok !$unplayed_item->{viewCount}, 'mark_unplayed clears viewCount';
 
 done_testing;

@@ -23,14 +23,8 @@ like $https_alert->ws_url, qr{^wss://}, 'ws_url uses wss:// for https baseurl';
 
 # --- listen requires AnyEvent ---
 
-SKIP: {
-    eval { require AnyEvent; require AnyEvent::WebSocket::Client };
-    skip 'AnyEvent or AnyEvent::WebSocket::Client not installed', 1 if $@;
-    can_ok $alert, 'listen';
-}
-
-# --- listen is defined ---
-
-ok $alert->can('listen'), 'listen method exists';
+use_ok 'AnyEvent';
+use_ok 'AnyEvent::WebSocket::Client';
+can_ok $alert, 'listen';
 
 done_testing;

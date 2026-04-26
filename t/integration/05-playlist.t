@@ -70,24 +70,21 @@ is $new_title, 'Integration Test Playlist (Renamed)', 'update changes title';
 
 # --- remove_item ---
 
-my $pl_item_id = $pl_item_list->[0]{playlistItemID} // $pl_item_list->[0]{ratingKey};
-if ($pl_item_id) {
-    $plex->playlist->remove_item($pl_id, $pl_item_id);
-    my $after = $plex->playlist->items($pl_id);
-    my $after_list = items_in($after);
-    $after_list = [$after_list] unless ref $after_list eq 'ARRAY';
-    ok scalar @$after_list < scalar @$pl_item_list, 'remove_item reduces item count';
-} else {
-    pass 'skipping remove_item (no playlistItemID in response)';
-}
+my $pl_item_id = $pl_item_list->[0]{playlistItemID};
+ok $pl_item_id, 'playlist item has playlistItemID field';
+
+$plex->playlist->remove_item($pl_id, $pl_item_id);
+my $after = $plex->playlist->items($pl_id);
+my $after_list = items_in($after);
+$after_list = [$after_list] unless ref $after_list eq 'ARRAY';
+ok scalar @$after_list < scalar @$pl_item_list, 'remove_item reduces item count';
 
 # --- delete ---
 
 $plex->playlist->delete($pl_id);
-pass 'delete did not throw';
 
-# Confirm gone: get should fail or return empty
+# Confirm gone: get should 404 (croak) or return empty MediaContainer
 my $gone = eval { $plex->playlist->get($pl_id) };
-ok !$gone || !$gone->{MediaContainer}{Metadata}, 'playlist gone after delete';
+ok $@ || !$gone->{MediaContainer}{Metadata}, 'playlist gone after delete';
 
 done_testing;

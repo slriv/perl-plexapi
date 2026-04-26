@@ -16,4 +16,7 @@ on test => sub {
     requires 'Test::MockModule';
     requires 'Test::LWP::UserAgent';
     requires 'CPAN::Changes';
+    requires 'YAML::XS';
+    requires 'AnyEvent';
+    requires 'AnyEvent::WebSocket::Client';
 };
