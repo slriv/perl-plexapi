@@ -1,19 +1,145 @@
 WebService-Plex
 
-Perl interface to the Plex Media Server API.
+Perl 5.42+ interface to the Plex Media Server HTTP API, built as a
+CPAN-style distribution using native class/field/method OO.
 
-This repository is scaffolded as a CPAN-style distribution.
-The API surface, tests, metadata, and release notes are expected to evolve.
+Repository: https://github.com/slriv/perl-plexapi
 
-Current layout:
 
-  lib/    Module source
-  t/      Distribution tests
+MODULES
 
-Build/install entry point:
+  WebService::Plex              Connection object, HTTP layer, submodule accessors
+  WebService::Plex::Server      Server identity, prefs, sessions, butler, diagnostics
+  WebService::Plex::Library     Sections, metadata, search, maintenance, playback state
+  WebService::Plex::Video       Movies, shows, seasons, episodes (type codes: 1-4,12)
+  WebService::Plex::Audio       Artists, albums, tracks (type codes: 8-10)
+  WebService::Plex::Playlist    Playlist CRUD and item management
+  WebService::Plex::Collection  Collection CRUD and item management
+  WebService::Plex::DownloadQueue Download queue management
+  WebService::Plex::PlayQueue   Play queue management and item control
+  WebService::Plex::Photo       Photo transcoding and image helpers
+  WebService::Plex::Services    Service endpoints (e.g. ultrablur)
+  WebService::Plex::LiveTV      Live TV DVR, EPG, and session access
+  WebService::Plex::MyPlex      plex.tv account, home users, watchlist
+  WebService::Plex::Client      Remote playback and navigation control per client device
+  WebService::Plex::Alert       WebSocket notification listener (optional: AnyEvent)
 
-  Makefile.PL
 
-Dependency manifest for developers/tools:
+QUICK START
 
-  cpanfile
+  use v5.42;
+  use WebService::Plex;
+
+  # token is optional for a local unclaimed server
+  my $plex = WebService::Plex->new(
+      baseurl => 'http://localhost:32400',
+      token   => $ENV{PLEX_TOKEN},
+  );
+
+  my $sessions = $plex->server->sessions;
+  my $movies   = $plex->video->movies(1);
+  my $albums   = $plex->audio->albums_for($artist_key);
+  $plex->library->mark_played(12345);
+  $plex->myplex->add_to_watchlist(12345);
+
+  my $client = $plex->client('http://192.168.1.50:32433');
+  $client->play;
+
+  my $livetv = $plex->livetv;
+  $livetv->dvrs(limit => 10);
+
+  $plex->alert->listen(sub { my ($nc) = @_; say $nc->{type}; return 1 });
+
+
+UNIT TESTS
+
+  perl Makefile.PL && make && make test
+
+  Via Docker (no local Perl 5.42 needed):
+    docker build -f docker/test/Dockerfile -t plexapi-test .
+    docker run --rm plexapi-test
+
+
+INTEGRATION TESTS
+
+  Integration tests run against a real Plex Media Server in Docker.
+  They skip automatically when the server is not available, so they
+  never break the regular `make test` run.
+
+  One-time setup (requires ffmpeg and Docker):
+
+    bash tools/create-test-media.sh
+    docker compose up -d
+    perl tools/bootstrap-test-server.pl
+
+  Run the integration suite:
+
+    make test_integration
+
+  Tear down:
+
+    docker compose down
+
+  Full reset (wipes Plex config for a clean re-bootstrap):
+
+    make plex_reset
+
+  Environment variables:
+
+    PLEX_TEST_BASEURL   Server URL (default: http://127.0.0.1:32400)
+    PLEX_TEST_TOKEN     Auth token (leave unset for an unclaimed server)
+
+
+OPEN TODOS
+
+  Library:
+    Playback state methods are interim here; final home is on Video/Audio
+    typed objects (see python-plexapi PlayedUnplayedMixin / Playable).
+
+  Playlist and Collection:
+    Playlist uri format (server:// scheme) is non-trivial to construct
+    without first fetching the server machineIdentifier.
+
+  MyPlex:
+    Server sharing API (requires machineIdentifier + section IDs) not yet
+    implemented.
+
+  Alert:
+    Malformed WebSocket messages are silently dropped; add a logging hook.
+    listen() is not fully testable without a network connection or an
+    AnyEvent::WebSocket::Client mock harness.
+
+  Missing vs python-plexapi:
+    Server Settings object (settings.py)
+    Sonos speaker integration (sonos.py)
+    Device sync (sync.py)
+    GDM local server discovery (gdm.py)
+    Rich media/stream metadata objects (media.py)
+    Custom exception hierarchy (exceptions.py)
+    Mixin system: edit, rating, artwork, smart-filter, watched state
+
+
+DEPENDENCIES
+
+  Runtime:  Carp, HTTP::Request, JSON::XS, LWP::UserAgent, URI::Escape
+  Optional: AnyEvent, AnyEvent::WebSocket::Client (for WebService::Plex::Alert)
+  Test:     Test::More, Test::Exception, Test::MockModule, Test::LWP::UserAgent
+  Requires: Perl v5.42+
+
+
+LICENSE
+
+  Copyright (C) 2026 Sam Robertson.
+  GNU General Public License, version 3 or later.
+  See https://www.gnu.org/licenses/ for details.
+
+
+FILES
+
+  Makefile.PL                    Build/install entry point
+  cpanfile                       Dependency manifest for developers and tooling
+  Changes                        Revision history
+  docker-compose.yml             Plex Media Server container for integration tests
+  tools/create-test-media.sh     Generate stub MP4/MP3 media for the test library
+  tools/bootstrap-test-server.pl Configure test server libraries via Plex API
+  t/integration/                 Integration test suite

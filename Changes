@@ -1,4 +1,50 @@
 Revision history for WebService-Plex
 
-0.01  2026-04-18
-    - Initial CPAN distribution scaffold.
+0.01 2026-04-25
+ [2026-04-24]
+ - Initial CPAN distribution scaffold
+ - WebService::Plex -- connection object, HTTP layer (get, post, put,
+   delete), JSON decode with croak on HTTP and parse errors
+ - WebService::Plex::Server -- identity, capabilities, preferences,
+   activities, sessions, transcode_sessions, clients, devices,
+   set_preference, create_token, scheduled_tasks, run_task, stop_task,
+   server_logs, check_for_updates, update_status
+ - WebService::Plex::Library -- sections, section_all, section_search,
+   recently_added, on_deck, search, metadata, metadata_children,
+   refresh_section, refresh_metadata, empty_trash, mark_played,
+   mark_unplayed, update_progress
+ - WebService::Plex::Playlist -- all, get, items, create, update, delete,
+   add_items, remove_item
+ - WebService::Plex::Collection -- all, get, items, create, update, delete,
+   add_items, remove_items
+
+ [2026-04-25]
+ - HTTP layer test coverage via Test::LWP::UserAgent; _decode error paths,
+   empty body, JSON array/object, XML passthrough, request headers, all
+   HTTP verbs, submodule accessor caching; 300 tests total
+ - Test coverage gaps filled across all submodule tests
+ - WebService::Plex -- _abs HTTP variants for external service URLs;
+   baseurl and token public accessors; XML passthrough in _decode for
+   client control responses
+ - WebService::Plex::Video -- movies, shows, seasons, episodes,
+   all_episodes, search, analyze; TYPE_MOVIE/SHOW/SEASON/EPISODE/CLIP
+   constants
+ - WebService::Plex::Audio -- artists, albums, albums_for, tracks,
+   all_tracks, search, analyze; TYPE_ARTIST/ALBUM/TRACK constants
+ - WebService::Plex::MyPlex -- account, ping, claim_token, webhooks,
+   home_users, switch_home_user, watchlist, add_to_watchlist,
+   remove_from_watchlist
+ - WebService::Plex::Client -- play, pause, stop, seek, skip_next,
+   skip_prev, set_volume, nav_up/down/left/right/select/back/home;
+   auto-incrementing commandID per session
+ - WebService::Plex::Alert -- WebSocket notification listener via
+   AnyEvent::WebSocket::Client (optional recommends dependency)
+
+ [2026-04-25 live-server corrections]
+ - WebService::Plex -- token now optional (default ''); supports unclaimed local
+   servers such as fresh Docker test instances not linked to a plex.tv account
+ - WebService::Plex::Library -- update_progress: fixed endpoint
+   /:/timeline -> /:/progress and parameter ratingKey -> key
+ - WebService::Plex::Server -- run_task: confirmed POST (was documented as PUT)
+ - WebService::Plex::Video, WebService::Plex::Audio -- analyze: corrected
+   verb GET -> PUT

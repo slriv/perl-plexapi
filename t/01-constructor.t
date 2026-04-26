@@ -14,10 +14,19 @@ dies_ok {
     WebService::Plex->new(token => 'abc');
 } 'dies without baseurl';
 
-# Missing token
+# Empty string baseurl
 dies_ok {
+    WebService::Plex->new(baseurl => '', token => 'abc');
+} 'dies with empty baseurl';
+
+# Token is optional (unclaimed local server)
+lives_ok {
     WebService::Plex->new(baseurl => 'http://x');
-} 'dies without token';
+} 'constructs without token (unclaimed server)';
+
+lives_ok {
+    WebService::Plex->new(baseurl => 'http://x', token => '');
+} 'constructs with empty token';
 
 # Custom timeout
 lives_ok {
