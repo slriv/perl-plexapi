@@ -10,8 +10,8 @@ my $fake = FakePlex->new;
 my $pq   = WebService::Plex::PlayQueue->new(plex => $fake);
 
 $pq->create(type => 'video', uri => 'server://1/movie/2');
-is $fake->last_call->{method}, 'post', 'create uses POST';
-is $fake->last_call->{path}, '/playQueues', 'create path';
+is $fake->last_call->{method}, 'post',          'create uses POST';
+like $fake->last_call->{path}, qr{^/playQueues\b}, 'create path';
 
 $pq->get(42);
 is $fake->last_call->{method}, 'get', 'get uses GET';
@@ -60,8 +60,8 @@ is $fake->last_call->{path},   '/playQueues/42',  'refresh path';
 # --- from_station_key ---
 
 $pq->from_station_key('/library/metadata/500/station/abc');
-is $fake->last_call->{method},              'post',       'from_station_key uses POST';
-is $fake->last_call->{path},               '/playQueues','from_station_key path';
+is $fake->last_call->{method},  'post',              'from_station_key uses POST';
+like $fake->last_call->{path},  qr{^/playQueues\b},  'from_station_key path';
 is $fake->last_call->{params}{isStation},  1,             'from_station_key isStation=1';
 is $fake->last_call->{params}{type},       'audio',       'from_station_key type=audio';
 

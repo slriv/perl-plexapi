@@ -26,9 +26,9 @@ is $fake->last_call->{path},   '/library/collections/42/children', 'items path';
 # --- write ---
 
 $col->create(1, title => 'Sci-Fi', type => 1, smart => 0);
-is $fake->last_call->{method},            'post',                'create uses POST';
-is $fake->last_call->{path},              '/library/collections', 'create path';
-is $fake->last_call->{params}{sectionId}, 1,                     'create sectionId param';
+is $fake->last_call->{method},            'post',                         'create uses POST';
+like $fake->last_call->{path},            qr{^/library/collections\b},    'create path';
+is $fake->last_call->{params}{sectionId}, 1,                              'create sectionId param';
 is $fake->last_call->{params}{title},     'Sci-Fi',              'create title param';
 is $fake->last_call->{params}{type},      1,                     'create type param';
 is $fake->last_call->{params}{smart},     0,                     'create smart=0 param';
@@ -46,8 +46,8 @@ is $fake->last_call->{method}, 'delete',                    'delete uses DELETE'
 is $fake->last_call->{path},   '/library/collections/42',   'delete path';
 
 $col->add_items(42, 100, 101, 102);
-is $fake->last_call->{method},        'post',                          'add_items uses POST';
-is $fake->last_call->{path},          '/library/collections/42/items', 'add_items path';
+is $fake->last_call->{method},   'post',                                    'add_items uses POST';
+like $fake->last_call->{path},   qr{^/library/collections/42/items\b},      'add_items path';
 like $fake->last_call->{params}{uri}, qr{100},                         'add_items first key';
 like $fake->last_call->{params}{uri}, qr{102},                         'add_items last key';
 

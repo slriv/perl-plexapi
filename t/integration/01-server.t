@@ -24,7 +24,8 @@ ok $sessions, 'sessions returns data';
 # butler tasks
 my $tasks = $plex->server->scheduled_tasks;
 ok $tasks, 'scheduled_tasks returns data';
-my $task_list = $tasks->{MediaContainer}{ButlerTask} // [];
+# Response is ButlerTasks.ButlerTask (not MediaContainer.ButlerTask)
+my $task_list = $tasks->{ButlerTasks}{ButlerTask} // [];
 $task_list = [$task_list] unless ref $task_list eq 'ARRAY';
 ok scalar @$task_list > 0, 'at least one butler task';
 

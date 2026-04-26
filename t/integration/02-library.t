@@ -27,8 +27,8 @@ ok $movies_key, 'Movies section has a key';
 # --- section detail ---
 
 my $section = $plex->library->section($movies_key);
-is $section->{MediaContainer}{Directory}[0]{title} // $section->{MediaContainer}{title},
-   'Movies', 'section returns correct title';
+# Section detail stores the title in title1, not Directory[0]{title}
+is $section->{MediaContainer}{title1}, 'Movies', 'section returns correct title';
 
 # --- section_all: movies ---
 

@@ -57,7 +57,9 @@ sub section_key {
 sub items_in {
     my ($data) = @_;
     my $mc = $data->{MediaContainer} // {};
-    for my $key (qw(Video Directory Track Album Artist Metadata)) {
+    # Metadata before Directory: when both exist (e.g. show children response),
+    # Metadata holds the actual seasons/episodes; Directory holds nav entries.
+    for my $key (qw(Video Metadata Track Album Artist Directory)) {
         return $mc->{$key} if exists $mc->{$key};
     }
     return [];

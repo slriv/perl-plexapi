@@ -132,7 +132,10 @@ class WebService::Plex 0.01 {
     }
 
     method post ($path, %params) {
-        $self->&_decode($self->&_ua->post($baseurl . $path, \%params));
+        # Plex universally expects query-string params even on POST requests.
+        my $url = $baseurl . $path;
+        $url .= '?' . $self->&_encode_params(%params) if %params;
+        $self->&_decode($self->&_ua->post($url));
     }
 
     method put ($path, %params) {
@@ -157,7 +160,8 @@ class WebService::Plex 0.01 {
     }
 
     method post_abs ($url, %params) {
-        $self->&_decode($self->&_ua->post($url, \%params));
+        $url .= '?' . $self->&_encode_params(%params) if %params;
+        $self->&_decode($self->&_ua->post($url));
     }
 
     method put_abs ($url, %params) {

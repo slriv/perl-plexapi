@@ -85,9 +85,9 @@ like $fake->last_call->{path}, qr{plex\.tv/api/v2/resources}, 'resources path';
 # --- webhook management ---
 
 $my->add_webhook('https://example.com/hook');
-is $fake->last_call->{method},         'post_abs',                              'add_webhook uses post_abs';
-is $fake->last_call->{path},           'https://plex.tv/api/v2/user/webhooks',  'add_webhook path';
-is $fake->last_call->{params}{url},    'https://example.com/hook',              'add_webhook url param';
+is $fake->last_call->{method},         'post_abs',                                       'add_webhook uses post_abs';
+like $fake->last_call->{path},         qr{^https://plex\.tv/api/v2/user/webhooks\b},     'add_webhook path';
+is $fake->last_call->{params}{url},    'https://example.com/hook',                       'add_webhook url param';
 
 $my->delete_webhook('https://example.com/hook');
 is $fake->last_call->{method},         'delete_abs',                            'delete_webhook uses delete_abs';

@@ -19,10 +19,7 @@ class FakePlex {
     }
 
     method _log_call ($method, $path, %params) {
-        my $query = '';
-        if ($method ne 'post' && $method ne 'post_abs') {
-            $query = $self->_encode_params(%params);
-        }
+        my $query = $self->_encode_params(%params);
         push @_log, { method => $method, path => $path . $query, params => \%params };
     }
 

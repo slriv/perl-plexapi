@@ -14,8 +14,8 @@ is $fake->last_call->{method}, 'get', 'dvrs uses GET';
 is $fake->last_call->{path}, '/livetv/dvrs?limit=10', 'dvrs path';
 
 $livetv->create_dvr(name => 'Test DVR');
-is $fake->last_call->{method}, 'post', 'create_dvr uses POST';
-is $fake->last_call->{path}, '/livetv/dvrs', 'create_dvr path';
+is $fake->last_call->{method}, 'post',                'create_dvr uses POST';
+like $fake->last_call->{path}, qr{^/livetv/dvrs\b},   'create_dvr path';
 
 $livetv->dvr('abc123');
 is $fake->last_call->{path}, '/livetv/dvrs/abc123', 'dvr path';
@@ -25,8 +25,8 @@ is $fake->last_call->{method}, 'delete', 'delete_dvr uses DELETE';
 is $fake->last_call->{path}, '/livetv/dvrs/abc123', 'delete_dvr path';
 
 $livetv->tune_channel('abc123', '101', quality => '720p');
-is $fake->last_call->{method}, 'post', 'tune_channel uses POST';
-is $fake->last_call->{path}, '/livetv/dvrs/abc123/channels/101/tune', 'tune_channel path';
+is $fake->last_call->{method}, 'post',                                              'tune_channel uses POST';
+like $fake->last_call->{path}, qr{^/livetv/dvrs/abc123/channels/101/tune\b},        'tune_channel path';
 
 $livetv->dvr_device('abc123', 'dev456');
 is $fake->last_call->{path}, '/livetv/dvrs/abc123/devices/dev456', 'dvr_device path';
