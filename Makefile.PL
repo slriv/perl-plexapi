@@ -91,6 +91,14 @@ WriteMakefile(
     clean            => { FILES => '*.tar.gz *.bak' },
     META_MERGE       => {
         'meta-spec' => { version => 2 },
+        resources   => {
+            repository => 'https://github.com/slriv/perl-plexapi',
+            bugtracker => 'https://github.com/slriv/perl-plexapi/issues',
+            homepage   => 'https://github.com/slriv/perl-plexapi',
+        },
+        no_index    => {
+            directory => [ 't', 'tools' ],
+        },
         provides    => {
             'WebService::Plex' => {
                 file    => 'lib/WebService/Plex.pm',
