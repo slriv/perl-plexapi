@@ -80,8 +80,8 @@ class WebService::Plex::Library {
 
     # ----------------------------------------------------------- maintenance
 
-    method refresh_section ($key) {
-        $plex->get("/library/sections/$key/refresh");
+    method refresh_section ($key, %params) {
+        $plex->get("/library/sections/$key/refresh", %params);
     }
 
     method refresh_metadata ($rating_key) {
@@ -264,9 +264,11 @@ C<accountID>, C<metadataItemID>, C<librarySectionID> filters.
 
 =head2 Maintenance
 
-=head3 refresh_section($key)
+=head3 refresh_section($key, %params)
 
-Triggers a metadata refresh for a section.
+Refreshes a library section. Optional C<%params> are forwarded as query
+parameters to C<GET /library/sections/$key/refresh> (for example,
+C<path=> for a path-targeted scan).
 
 =head3 refresh_metadata($rating_key)
 

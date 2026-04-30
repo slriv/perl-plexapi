@@ -64,6 +64,10 @@ $lib->refresh_section(3);
 is $fake->last_call->{method}, 'get',                         'refresh_section uses GET';
 is $fake->last_call->{path},   '/library/sections/3/refresh', 'refresh_section path';
 
+$lib->refresh_section(3, path => '/some/folder');
+is $fake->last_call->{path},           '/library/sections/3/refresh?path=%2Fsome%2Ffolder', 'refresh_section path with query param';
+is $fake->last_call->{params}{path},  '/some/folder',                  'refresh_section path param';
+
 $lib->refresh_metadata(12345);
 is $fake->last_call->{method}, 'put',                              'refresh_metadata uses PUT';
 is $fake->last_call->{path},   '/library/metadata/12345/refresh',  'refresh_metadata path';
