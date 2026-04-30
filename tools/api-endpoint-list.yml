@@ -1,0 +1,45 @@
+# Canonical API endpoint mapping for the comparison tool.
+# The `perl` and `python` keys are optional hints for library-specific runners.
+# This inventory is intended to drive API coverage comparison between the
+# perl-plexapi and python-plexapi implementations.
+
+- name: server.sessions
+  group: Server
+  perl: server.sessions
+  python: server.sessions
+  method: GET
+  path: /status/sessions
+  params:
+  - name: includeLiveMedia
+    type: bool
+    required: false
+
+- name: library.sections
+  group: Library
+  perl: library.sections
+  python: library.sections
+  method: GET
+  path: /library/sections
+  params: []
+
+- name: video.movies
+  group: Video
+  perl: video.movies
+  python: video.movies
+  method: GET
+  path: /library/sections/{section_id}/all
+  params:
+  - name: type
+    type: int
+    required: false
+
+- name: audio.albums
+  group: Audio
+  perl: audio.albums
+  python: audio.albums
+  method: GET
+  path: /library/sections/{section_id}/all
+  params:
+  - name: section_id
+    type: int
+    required: true

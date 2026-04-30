@@ -74,8 +74,7 @@ Build a tool that compares the behavior of Plex API calls between `python-plexap
 3. Build a Python harness in `tools/python_api_compare.py`.
 4. Implement JSON normalization and diffing.
 5. Run the comparison against a configured Plex test server.
-6. Add regression tests for the comparison tool itself.
-
+6. Add regression tests for the comparison tool itself.8. Document usage in `tools/api_compare/README.md` and link it from this plan.
 ## Environment and Dependencies
 
 - Use the same Docker/Test server environment as the existing `perl-plexapi` suite.
