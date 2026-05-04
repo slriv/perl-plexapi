@@ -42,11 +42,14 @@ $plex->server->run_task('CleanOldBundles');
 my $sections = $plex->library->sections;
 my $movies   = $plex->video->movies(1);         # section key 1
 my $shows    = $plex->video->shows(2);
+my $show_key = $shows->{MediaContainer}{Metadata}[0]{ratingKey};
 my $episodes = $plex->video->all_episodes($show_key);
 
-my $artists  = $plex->audio->artists(3);
-my $albums   = $plex->audio->albums_for($artist_key);
-my $tracks   = $plex->audio->tracks($album_key);
+my $artists    = $plex->audio->artists(3);
+my $artist_key = $artists->{MediaContainer}{Metadata}[0]{ratingKey};
+my $albums     = $plex->audio->albums_for($artist_key);
+my $album_key  = $albums->{MediaContainer}{Metadata}[0]{ratingKey};
+my $tracks     = $plex->audio->tracks($album_key);
 
 # Playback state
 $plex->library->mark_played(12345);
